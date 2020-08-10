@@ -68,30 +68,61 @@ def current_player
 end
 
 def won?
-  flag = nil
-  WIN_COMBINATIONS.each
+  win = nil
+  WIN_COMBINATIONS.each do |win_array|
+  if win_array.all? {|win_spot|
+  @board[win_spot] == "X"}
+  win = win_array
+  elsif win_array.all? {|win_spot|
+  @board[win_spot] == "O"}
+  win = win_array
+end
+end
+win
+end
+
+def draw?
+  if full?
+   !won?
+end
+end
 
 def full?
   @board.none? {|i| i == " "}
 end
 
-def winner?
-  WIN_COMBINATIONS.each {|win_array|
-    if win_array.all? {|win_spot|
-    win_spot == "X"}
-      "X"
-  elsif win_array.all? {|win_spot|
-    win_spot == "O"}
-       "O"
-    else
-      false
+def winner
+  if won? != nil
+  if won?.all? {|i| @board[i] == "X"}
+    "X"
+  elsif won?.all? {|i| @board[i] == "O"}
+  "O"
+else
+  nil
   end
- }
+end
 end
 
-# def play
-#   until full? || winner?
-#
-#   end
-end
+def over?
+  if won?
+    true
+  elsif draw?
+    true
+  elsif !full?
+    false
+    end
+  end
+
+def play
+   until over?
+     turn
+   end
+
+   if won?
+     puts "Congratulations #{winner}!"
+  elsif draw?
+    puts"Cat's Game!"
+   end
+ end
+
 end
